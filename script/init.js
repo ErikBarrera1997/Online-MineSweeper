@@ -1,0 +1,3 @@
+// Inicializar juego
+generarTablero();
+generarCeldas();

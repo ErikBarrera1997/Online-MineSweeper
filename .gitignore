@@ -1,0 +1,20 @@
+# Ignore everything by default
+*
+
+# Allow directories so Git can traverse them
+!*/
+
+# Allow specific necessary files
+!.gitignore
+!*.html
+!*.css
+!*.js
+!*.php
+!*.txt
+
+# Allow image formats
+!*.png
+!*.jpg
+!*.jpeg
+!*.gif
+!*.svg

@@ -1,0 +1,91 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+  margin: 0;
+  padding-top: 50px;
+  background-color: #2c3e50;
+}
+
+#container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: auto;
+  background-color: #bdc3c7;
+  padding: 10px;
+  border: 4px solid #7f8c8d;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+#stats {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  background-color: #000;
+  margin-bottom: 10px;
+  padding: 5px 15px;
+  box-sizing: border-box;
+  border: 2px inset #ffffff;
+}
+
+#timer, #mines {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 28px;
+  font-weight: bold;
+  color: #ff0000;
+  line-height: 1;
+}
+
+#reset {
+  width: 30px;
+  height: 30px;
+  background-color: #bdc3c7;
+  border: 3px outset #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  font-size: 20px;
+}
+
+#reset:active { border-style: inset; }
+#reset::after { content: "🙂"; }
+
+#field {
+  display: grid;
+  background-color: #34495e;
+  padding: 5px;
+  width: fit-content;
+  height: fit-content;
+  
+}
+
+.celda {
+  width: 30px;
+  height: 30px;
+  background-color: #95a5a6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  font-family: Arial, sans-serif;
+  border: 1px solid #f1f2f4;
+}
+
+.celda:hover:not(.revealed) {
+  background-color: #bdc3c7;
+}
+
+.celda.revealed {
+  background-color: #ecf0f1;
+  cursor: default;
+}
+
+.celda.mine {
+  background-color: #e74c3c;
+}
