@@ -1,0 +1,41 @@
+.message-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.message-window {
+  background-color: #bdc3c7;
+  border: 4px solid #7f8c8d;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  text-align: center;
+  min-width: 200px;
+}
+
+.message-window p {
+  font-family: 'Arial', sans-serif;
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.message-window button {
+  padding: 8px 20px;
+  background-color: #ecf0f1;
+  border: 2px outset #ffffff;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.message-window button:active {
+  border-style: inset;
+}

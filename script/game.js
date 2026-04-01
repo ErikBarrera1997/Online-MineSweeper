@@ -1,6 +1,6 @@
 ﻿// Parametros del tablero
-const filas = 16;
-const columnas = 16;
+const filas = 36;
+const columnas = 36;
 const totalCeldas = filas * columnas;
 const tamanioCelda = 30;
 
@@ -51,6 +51,7 @@ function generarTablero() {
     celda++;
   }
 
+  setCellsToDiscover(totalCeldas, minasContadas);
   document.getElementById("mines").textContent = minasContadas.toString().padStart(3, '0');
   document.getElementById("timer").textContent = "000";
 }
@@ -60,25 +61,24 @@ function generarTablero() {
  * listens for click events to reveal its content. 
  */
 function generarCeldas() {
-  const divTablero = document.getElementById("field");
-  divTablero.style.gridTemplateColumns = `repeat(${columnas}, ${tamanioCelda}px)`;
-  divTablero.style.gridTemplateRows = `repeat(${filas}, ${tamanioCelda}px)`;
-  divTablero.innerHTML = "";
-  tablero.forEach((valor, index) => {
-    const celda = document.createElement("div");
-    celda.className = "celda";
-    celda.id = `celda-${index}`;
+    const divTablero = document.getElementById("field");
+    divTablero.style.gridTemplateColumns = `repeat(${columnas}, ${tamanioCelda}px)`;
+    divTablero.style.gridTemplateRows = `repeat(${filas}, ${tamanioCelda}px)`;
+    divTablero.innerHTML = "";
 
-    celda.addEventListener("click", () => revelarCelda(index));
-    
-    divTablero.appendChild(celda);
-  });
+    tablero.forEach((valor, index) => {
+      const celda = document.createElement("div");
+      celda.className = "celda";
+      celda.id = `celda-${index}`;
+      celda.addEventListener("click", () => revelarCelda(index));
+      divTablero.appendChild(celda);
+    });
 }
 
 function revelarCelda(index) {
   const celda = document.getElementById(`celda-${index}`);
 
-  if (!celda || celda.classList.contains("revealed")) return;
+  if (!celda || celda.classList.contains("revealed") || celda.classList.contains("locked")) return;
 
   const valor = tablero[index];
   celda.classList.add("revealed");
@@ -86,7 +86,8 @@ function revelarCelda(index) {
       if (valor === -1) {
         celda.textContent = "💣";
         celda.classList.add("mine");
-        alert("¡Boom! Fin del juego.");
+        messages.mostrarMensaje("¡Boom! Fin del juego.");
+        restrict();
       } else {
         celda.textContent = valor > 0 ? valor.toString() : "";
       
@@ -94,7 +95,7 @@ function revelarCelda(index) {
         celda.style.color = coloresMina[valor];
       }
     
-    // Si la celda es "blanca" (0), revelar vecinos recursivamente
+      // Si la celda es "blanca" (0), revelar vecinos recursivamente
       if (valor === 0) {
         const r = Math.floor(index / columnas);
         const c = index % columnas;
@@ -109,6 +110,23 @@ function revelarCelda(index) {
         }
       }
     }
+
+    setDiscoveredCells(1);
+
+    if(getDiscoveredCells() === getTotalCells()) {
+      restrict();
+      messages.mostrarMensaje("¡Felicidades! Has ganado el juego.");
+    }
+   
+}
+
+function restrict() {
+  for (let j = 0; j < totalCeldas; j++) {
+    const cell = document.getElementById(`celda-${j}`);
+    if (cell) {
+      cell.classList.add("locked");
+    }
+  }
 }
 
 document.getElementById("reset").addEventListener("click", () => {
