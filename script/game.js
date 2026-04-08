@@ -115,6 +115,7 @@ function revelarCelda(index) {
 
     if(getDiscoveredCells() === getTotalCells()) {
       restrict();
+      stopTimer();
       messages.mostrarMensaje("¡Felicidades! Has ganado el juego.");
     }
    
@@ -132,4 +133,6 @@ function restrict() {
 document.getElementById("reset").addEventListener("click", () => {
     generarTablero();
     generarCeldas();
+    reset();
+    startTimer();
 });

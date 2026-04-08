@@ -21,3 +21,4 @@ function setDiscoveredCells(count) {
 function getDiscoveredCells() {
   return discoveredCells;
 }
+

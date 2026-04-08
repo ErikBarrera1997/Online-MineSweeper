@@ -1,0 +1,49 @@
+let timerIntervalId = null;
+let tick = null;
+let targetId = "timer";
+let intervalMs = 1000;
+
+function setTick(fn) {
+	if (typeof fn === "function") {
+		tick = fn;
+	}
+}
+
+function setTargetId(id) {
+	if (typeof id === "string" && id.length > 0) {
+		targetId = id;
+	}
+}
+
+function setIntervalMs(ms) {
+	if (typeof ms === "number" && ms > 0) {
+		intervalMs = ms;
+	}
+}
+
+function startTimer() {
+	if (timerIntervalId !== null) {
+		clearInterval(timerIntervalId);
+		timerIntervalId = null;
+	}
+
+	timerIntervalId = setInterval(() => {
+		if (typeof tick !== "function") return;
+		const value = tick();
+		const el = document.getElementById(targetId);
+		if (!el) return;
+		if (value === null || typeof value === "undefined") return;
+		el.textContent = value.toString().padStart(3, "0");
+	}, intervalMs);
+}
+
+function stopTimer() {
+	if (timerIntervalId !== null) {
+		clearInterval(timerIntervalId);
+		timerIntervalId = null;
+	}
+}
+
+function isTimerRunning() {
+	return timerIntervalId !== null;
+}
