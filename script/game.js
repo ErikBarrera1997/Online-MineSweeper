@@ -1,6 +1,6 @@
 ﻿// Parametros del tablero
-const filas = 36;
-const columnas = 36;
+const filas = 9;
+const columnas = 9;
 const totalCeldas = filas * columnas;
 const tamanioCelda = 30;
 
@@ -23,14 +23,13 @@ const coloresMina = [
  */
 function generarTablero() {
   tablero.fill(0);
-  let minasContadas = 0;
   let celda = 0;
 
   while (celda < totalCeldas) {
     if (tablero[celda] !== -1) {
       if (generate()) {
         tablero[celda] = -1;
-        minasContadas++;
+        setMine();
 
         const r = Math.floor(celda / columnas);
         const c = celda % columnas;
@@ -51,9 +50,16 @@ function generarTablero() {
     celda++;
   }
 
-  setCellsToDiscover(totalCeldas, minasContadas);
-  document.getElementById("mines").textContent = minasContadas.toString().padStart(3, '0');
+  setCellsToDiscover(totalCeldas, gettotalMines());
+  document.getElementById("mines").textContent = gettotalMines().toString().padStart(3, '0');
   document.getElementById("timer").textContent = "000";
+
+  const happyImg = getImage("happy");
+  const resetBtn = document.getElementById("reset");
+  if (resetBtn && happyImg) {
+    resetBtn.innerHTML = "";
+    resetBtn.appendChild(resizeImage(happyImg, 100, 100));
+  }
 }
 
 /**
@@ -83,10 +89,24 @@ function revelarCelda(index) {
   const valor = tablero[index];
   celda.classList.add("revealed");
 
-      if (valor === -1) {
-        celda.textContent = "💣";
+      if (valor === -1) {       
+        const mineImg = getImage("mine");
+        const sadImg = getImage("sad");
+
+        if (mineImg) {
+          celda.appendChild(resizeImage(mineImg, 100, 100));
+          const resetBtn = document.getElementById("reset");
+          resetBtn.innerHTML = "";
+          if (sadImg) resetBtn.appendChild(resizeImage(sadImg, 100, 100));
+        } else {
+          celda.textContent = "💣";
+        }
+
         celda.classList.add("mine");
-        messages.mostrarMensaje("¡Boom! Fin del juego.");
+        stopTimer();
+        if (!showSurprise()) {
+          messages.mostrarMensaje("¡Boom! Fin del juego.");
+        }
         restrict();
       } else {
         celda.textContent = valor > 0 ? valor.toString() : "";
@@ -116,7 +136,9 @@ function revelarCelda(index) {
     if(getDiscoveredCells() === getTotalCells()) {
       restrict();
       stopTimer();
-      messages.mostrarMensaje("¡Felicidades! Has ganado el juego.");
+      messages.mostrarMensaje("¡Felicidades!\nHas ganado el juego.\n\nPuntuación: " + 
+        getScore().toFixed(2) + " puntos.");
+      
     }
    
 }
@@ -130,9 +152,17 @@ function restrict() {
   }
 }
 
-document.getElementById("reset").addEventListener("click", () => {
-    generarTablero();
-    generarCeldas();
+function resetMatch() {
+  resetElapsedTime();
+  resetDiscover();
+  resetMines();
+  generarTablero();
+  generarCeldas();
+  startTimer();
+}
+
+document.getElementById("reset").addEventListener("click", () => {  
+    resetMatch();
     reset();
     startTimer();
 });

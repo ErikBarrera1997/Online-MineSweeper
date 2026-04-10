@@ -18,6 +18,8 @@ const messages = {
 
     const msg = document.createElement("p");
     msg.textContent = texto;
+    msg.style.textAlign = "center";
+    msg.style.whiteSpace = "pre-line";
 
     const btn = document.createElement("button");
     btn.textContent = "Aceptar";

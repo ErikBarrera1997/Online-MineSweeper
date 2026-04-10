@@ -53,7 +53,7 @@ body {
 }
 
 #reset:active { border-style: inset; }
-#reset::after { content: "🙂"; }
+/* #reset::after { content: "🙂"; } */
 
 #field {
   display: grid;
