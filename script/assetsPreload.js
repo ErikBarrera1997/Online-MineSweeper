@@ -3,6 +3,8 @@ const ASSET_LIST = {
 	mine: "assets/mine.webp",
 	happy: "assets/happy.webp",
 	sad: "assets/sad.webp",
+	main: "assets/main.webp",
+	// Agrega más imágenes aquí según sea necesario
 };
 
 const ASSET_CACHE = {};
@@ -31,12 +33,6 @@ function preloadImages() {
 	});
 }
 
-// Obtener una imagen ya precargada por su clave.
-// Ejemplo:
-// const mineImg = getAsset("mine");
-// if (mineImg) {
-//   document.getElementById("someElement").style.backgroundImage = `url(${mineImg.src})`;
-// }
 function getImage(key) {
 	return ASSET_CACHE[key] || null;
 }

@@ -1,4 +1,4 @@
-﻿// Parametros del tablero
+﻿﻿// Parametros del tablero
 const filas = 9;
 const columnas = 9;
 const totalCeldas = filas * columnas;
@@ -154,6 +154,7 @@ function restrict() {
 
 function resetMatch() {
   resetElapsedTime();
+  reset(); // Resets the internal counter in countdown.js
   resetDiscover();
   resetMines();
   generarTablero();
@@ -162,7 +163,5 @@ function resetMatch() {
 }
 
 document.getElementById("reset").addEventListener("click", () => {  
-    resetMatch();
-    reset();
-    startTimer();
+    resetMatch(); // resetMatch already handles clearing states and starting the timer
 });
