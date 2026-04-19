@@ -2,10 +2,6 @@
 	let increment = 1; // valor por defecto.
 	let activated = false;
 
-	function Temporizer(increment) {
-		setIncrement(increment);
-	}
-
 	function getCount(){
 		count += increment;
 		return count;

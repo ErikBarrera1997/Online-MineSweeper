@@ -76,7 +76,9 @@ function generarCeldas() {
       const celda = document.createElement("div");
       celda.className = "celda";
       celda.id = `celda-${index}`;
-      celda.addEventListener("click", () => revelarCelda(index));
+      celda.addEventListener("click", () => {
+        revelarCelda(index);
+      });
       divTablero.appendChild(celda);
     });
 }

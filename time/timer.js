@@ -3,6 +3,10 @@ let tick = null;
 let targetId = "timer";
 let intervalMs = 1000;
 
+/**
+ * Sets the function to be called on each timer tick. 
+ * @param {*} fn 
+ */
 function setTick(fn) {
 	if (typeof fn === "function") {
 		tick = fn;
@@ -28,6 +32,7 @@ function startTimer() {
 	}
 
 	timerIntervalId = setInterval(() => {
+		//console.log("Timer: {tick: ", tick, ", targetId: ", targetId, ", intervalMs: ", intervalMs, "}");
 		if (typeof tick !== "function") return;
 		const value = tick();
 		const el = document.getElementById(targetId);
@@ -35,7 +40,9 @@ function startTimer() {
 		
 		// Update the shared elapsed time in score.js to keep score accurate
 		setElapsedTime(1);
-		
+
+		getRandomAudio(); // Play random audio on each tick
+
 		if (value === null || typeof value === "undefined") return;
 		el.textContent = value.toString().padStart(3, "0");
 	}, intervalMs);
@@ -51,4 +58,3 @@ function stopTimer() {
 function isTimerRunning() {
 	return timerIntervalId !== null;
 }
-
