@@ -18,3 +18,8 @@
 !*.jpeg
 !*.gif
 !*.svg
+
+# Allow audio formats
+!*.ogg
+!*.mp3
+!*.wav
