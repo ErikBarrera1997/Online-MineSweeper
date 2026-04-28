@@ -1,6 +1,7 @@
 
 const AUDIO_LIST = {
 	creepy: "assets/creepy.ogg",
+	null: "assets/null.ogg",
 };
 
 const AUDIO_CACHE = {};
@@ -47,6 +48,14 @@ function playAudio(audioName) {
 				console.warn("Audio Engine: Error/Bloqueo del navegador:", err.message);
 			});
 		}
+	}
+}
+
+function stopAudio(audioName) {
+	const audio = AUDIO_CACHE[audioName];
+	if (audio) {
+		audio.pause();
+		audio.currentTime = 0;
 	}
 }
 

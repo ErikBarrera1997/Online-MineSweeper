@@ -1,6 +1,6 @@
 ﻿﻿// Parametros del tablero
-const filas = 9;
-const columnas = 9;
+const filas = 15;
+const columnas = 36;
 const totalCeldas = filas * columnas;
 const tamanioCelda = 30;
 

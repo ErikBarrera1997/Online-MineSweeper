@@ -23,7 +23,11 @@ const messages = {
 
     const btn = document.createElement("button");
     btn.textContent = "Aceptar";
-    btn.onclick = () => overlay.remove();
+    btn.onclick = () => {
+      overlay.remove();
+      stopAudio("null");
+      stopAudio("creepy");
+    };
 
     win.appendChild(msg);
     win.appendChild(btn);
@@ -39,20 +43,36 @@ async function showSecretMessage() {
     const overlay = document.createElement("div");
     overlay.className = "message-overlay";
 
+    //image div
     const win = document.createElement("div");
     win.className = "message-window";
     win.style.backgroundColor = "#040404";
+    win.style.width = "100%";
+    win.style.height = "100%";
+    win.style.maxWidth = "none";
+    win.style.padding = "0";
+    win.style.borderRadius = "0";
+    win.style.position = "relative";
 
+    //image size settings
     if (img) {
-        img.style.maxWidth = "100%";
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.objectFit = "cover";
         img.style.display = "block";
-        img.style.marginBottom = "10px";
         win.appendChild(img);
     }
 
     const btn = document.createElement("button");
     btn.textContent = "Aceptar";
-    btn.onclick = () => overlay.remove();
+    btn.style.position = "absolute";
+    btn.style.bottom = "20px";
+    btn.style.left = "50%";
+    btn.style.transform = "translateX(-50%)";
+    btn.onclick = () => {
+        overlay.remove();
+        stopAudio("null");
+    };
 
     win.appendChild(btn);
     overlay.appendChild(win);
