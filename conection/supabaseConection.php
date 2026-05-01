@@ -1,15 +1,34 @@
 <?php
+/**
+ * Carga variables de entorno desde un archivo .env
+ */
+function loadEnv($path) {
+    if (!file_exists($path)) {
+        error_log("Archivo .env no encontrado en: $path");
+        return;
+    }
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        list($name, $value) = explode('=', $line, 2);
+        $name = trim($name);
+        $value = trim($value, " \t\n\r\0\x0B\"");
+        $_ENV[$name] = $value;
+    }
+}
+
+loadEnv(__DIR__ . '/../.env');
+
 // Supabase REST API Connection
-// Note: REST API uses your project URL + API key (not PostgreSQL password)
-$supabase_url = "https://tbcgnqxvskujlhsnynvq.supabase.co";
-$supabase_api_key = "https://tbcgnqxvskujlhsnynvq.supabase.co/rest/v1/"; // Get from Supabase Dashboard → Settings → API
+$supabase_url = $_ENV['SUPABASE_URL'] ?? "";
+$supabase_api_key = $_ENV['SUPABASE_API_KEY'] ?? "";
 
 // Legacy PostgreSQL credentials (kept for reference)
-$pg_host = "db.tbcgnqxvskujlhsnynvq.supabase.co";
-$pg_port = "5432";
-$pg_dbname = "postgres";
-$pg_user = "postgres";
-$pg_password = "S=p2_5Cg";
+$pg_host = $_ENV['PG_HOST'] ?? "";
+$pg_port = $_ENV['PG_PORT'] ?? "5432";
+$pg_dbname = $_ENV['PG_DBNAME'] ?? "";
+$pg_user = $_ENV['PG_USER'] ?? "";
+$pg_password = $_ENV['PG_PASSWORD'] ?? "";
 
 // Log POST data
 if (!empty($_POST)) {
