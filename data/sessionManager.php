@@ -1,6 +1,7 @@
 <?php
 const COOKIE_NAME = "ms_session";
 const COOKIE_LIFETIME = 3600;
+const COOKIE_PATH = "/mineSweeper/";
 
 /**
  * Sets an HttpOnly session cookie for the authenticated user.
@@ -19,7 +20,7 @@ function setSessionCookie($userData) {
 
     setcookie(COOKIE_NAME, $token, [
         "expires" => time() + COOKIE_LIFETIME,
-        "path" => "/",
+        "path" => COOKIE_PATH,
         "secure" => false,
         "httponly" => true,
         "samesite" => "Lax"
@@ -63,6 +64,14 @@ function verifySession() {
  * Destroys the session cookie.
  */
 function destroySession() {
+    setcookie(COOKIE_NAME, "", [
+        "expires" => time() - 3600,
+        "path" => COOKIE_PATH,
+        "secure" => false,
+        "httponly" => true,
+        "samesite" => "Lax"
+    ]);
+
     setcookie(COOKIE_NAME, "", [
         "expires" => time() - 3600,
         "path" => "/",
