@@ -14,9 +14,15 @@
       <span class="menu-item">Partida</span>
       <span class="menu-item">Opciones</span>
       <span class="menu-item">Acerca de</span>
+      <button id="login-btn" type="button" onclick="window.location.href='pages/logOn.html'">Log In</button>
     </div>
-    <button id="login-btn" type="button" onclick="window.location.href='pages/logOn.html'">Login</button>
   </nav>
+
+   <div id="user-greeting-bar" style="display: none;">
+      <span id="user-greeting" class="menu-item"></span>
+    </div>
+    
+    <button id="logout-btn" type="button" style="display: none;">Log Out</button>
 
   <div id="container">     
     <div id="stats">
@@ -27,6 +33,7 @@
     <div id="field"></div>
   </div>
 
+  <script src="data/authGuard.js"></script>
   <script src="audio/audioPreload.js"></script>
   <script src="audio/audioFunctions.js"></script>
   <script src="script/score.js"></script>
@@ -38,6 +45,33 @@
   <script src="script/game.js"></script>
   <script src="messages/message.js"></script>
   <script src="script/init.js"></script>
+
+  <script>
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const userGreetingBar = document.getElementById('user-greeting-bar');
+    const userGreeting = document.getElementById('user-greeting');
+
+    logoutBtn.addEventListener('click', () => logout());
+
+    (async () => {
+        try {
+            const response = await fetch('data/checkSession.php', {
+                credentials: 'include'
+            });
+            const data = await response.json();
+
+            if (data.authenticated) {
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'inline-block';
+                userGreetingBar.style.display = 'flex';
+                userGreeting.textContent = `Hola de nuevo '${data.user.user_name}'`;
+            }
+        } catch (error) {
+            console.error('Session check failed:', error);
+        }
+    })();
+  </script>
   
 </body>
 </html>

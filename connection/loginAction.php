@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/supabaseConection.php';
+require_once __DIR__ . '/../data/sessionManager.php';
 
 header('Content-Type: application/json');
 
@@ -17,11 +18,11 @@ $password = trim($_POST['password'] ?? '');
 
 try {
     if (empty($e_mail)) {
-        throw new Exception("e_mail is required");
+        throw new Exception("Debe ingresar el correo electrónico");
     }
 
     if (empty($password)) {
-        throw new Exception("password is required");
+        throw new Exception("Debe de ingresar la contraseña");
     }
 
     $result = supabase_get("MinesSweeperUserData", [
@@ -33,21 +34,20 @@ try {
     }
 
     if (!is_array($result) || count($result) === 0) {
-        throw new Exception("User not found");
+        throw new Exception("Usuario no encontrado");
     }
 
     $user = $result[0];
 
     if ($user['password'] !== $password) {
-        throw new Exception("Invalid password");
+        throw new Exception("Contraseña incorrecta");
     }
 
-    unset($user['password']);
+    setSessionCookie($user);
 
     echo json_encode([
         "success" => true,
-        "message" => "Login successful",
-        "user" => $user
+        "message" => "Login successful"
     ]);
 
 } catch (Exception $e) {
