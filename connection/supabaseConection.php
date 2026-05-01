@@ -184,7 +184,8 @@ function supabase_delete($table, $filters) {
     return json_decode($response, true);
 }
 
-// Test connection on direct access
-error_log("Supabase REST API ready: $supabase_url");
-echo "Connection successful to Supabase REST API";
+if (basename($_SERVER['PHP_SELF']) === 'supabaseConection.php') {
+    error_log("Supabase REST API ready: $supabase_url");
+    echo "Connection successful to Supabase REST API";
+}
 ?>
