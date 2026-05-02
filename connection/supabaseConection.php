@@ -1,6 +1,9 @@
 <?php
 /**
- * Carga variables de entorno desde un archivo .env
+ * Load environment variables from .env file and provide functions to interact with Supabase REST API.
+ * This file defines functions for making GET, POST, PATCH, and DELETE requests to Supabase, 
+ *  as well as loading configuration from a .env file. It also logs incoming POST data for debugging purposes. 
+ * The functions handle authentication using the API key and return decoded JSON responses. 
  */
 function loadEnv($path) {
     if (!file_exists($path)) {

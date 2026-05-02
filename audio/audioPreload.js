@@ -40,7 +40,7 @@ function playAudio(audioName) {
 	if (audio.paused) {
 		audio.volume = 0.3;
 		audio.currentTime = 0;
-		//console.log("Audio Engine: Intentando reproducir:", audioName);
+
 		const playPromise = audio.play();
 
 		if (playPromise !== undefined) {

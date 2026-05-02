@@ -96,6 +96,7 @@ function revelarCelda(index) {
         const sadImg = getImage("sad");
 
         if (mineImg) {
+          celda.innerHTML = ""; // Clear text content to avoid overlap
           celda.appendChild(resizeImage(mineImg, 100, 100));
           const resetBtn = document.getElementById("reset");
           resetBtn.innerHTML = "";

@@ -4,12 +4,13 @@ const ASSET_LIST = {
 	happy: "assets/happy.webp",
 	sad: "assets/sad.webp",
 	main: "assets/main.webp",
+	red_flag: "assets/red_flag.webp",
 	// Agrega más imágenes aquí según sea necesario
 };
 
 const ASSET_CACHE = {};
 
-// Precarga todas las imagenes del listado.
+//Pre-reload all images defined in ASSET_LIST 
 function preloadImages() {
 	const entries = Object.entries(ASSET_LIST);
 	if (entries.length === 0) return Promise.resolve({});

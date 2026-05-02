@@ -16,6 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $e_mail = trim($_POST['e_mail'] ?? '');
 $password = trim($_POST['password'] ?? '');
 
+//Verifies that the email and password are not empty, 
+//then checks the database for a user with the provided email. 
+//If a user is found, it compares the provided password with the stored password. 
+//If they match, it creates a session cookie for the user and returns a success response. 
+//If any step fails, it returns an appropriate error message.
 try {
     if (empty($e_mail)) {
         throw new Exception("Debe ingresar el correo electrónico");
