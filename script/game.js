@@ -5,17 +5,6 @@ const totalCeldas = filas * columnas;
 const tamanioCelda = 30;
 
 let tablero = new Array(totalCeldas).fill(0);
-const coloresMina = [
-  "",        // 0
-  "#0000ff", // 1: Azul
-  "#008000", // 2: Verde
-  "#ff0000", // 3: Rojo
-  "#000080", // 4: Azul oscuro
-  "#800000", // 5: Granate
-  "#008080", // 6: Turquesa
-  "#000000", // 7: Negro
-  "#808080"  // 8: Gris
-];
 
 /**
  * Creates a new game board with mines and numbers. Mines are represented by -1, 

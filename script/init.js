@@ -1,4 +1,6 @@
 //Initializing assets
+aplicarColoresDinamicos();
+
 preloadImages().then(() => {
     preloadAudio().then(() => {
         generarTablero();

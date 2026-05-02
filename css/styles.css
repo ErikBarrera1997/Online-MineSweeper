@@ -4,7 +4,7 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
-  background: #34495e url('../assets/main.webp') no-repeat center center fixed;
+  background: var(--bg-main, #34495e) url('../assets/main.webp') no-repeat center center fixed;
   background-size: cover;
   font-family: Arial, sans-serif;
 }
@@ -15,9 +15,9 @@ body {
   flex-direction: column;
   align-items: center;
   width: auto;
-  background-color: #bdc3c7;
+  background-color: var(--bg-container, #bdc3c7);
   padding: 10px;
-  border: 4px solid #7f8c8d;
+  border: 4px solid var(--border-primary, #7f8c8d);
   box-shadow: 0 10px 20px rgba(0,0,0,0.3);
   margin-top: 10px;
 }
@@ -44,7 +44,7 @@ body {
 #reset {
   width: 30px;
   height: 30px;
-  background-color: #bdc3c7;
+  background-color: var(--bg-container, #bdc3c7);
   border: 3px outset #eee;
   display: flex;
   justify-content: center;
@@ -58,7 +58,7 @@ body {
 
 #field {
   display: grid;
-  background-color: #34495e;
+  background-color: var(--bg-main, #34495e);
   padding: 5px;
   width: fit-content;
   height: fit-content;
@@ -67,7 +67,7 @@ body {
 .celda {
   width: 30px;
   height: 30px;
-  background-color: #95a5a6;
+  background-color: var(--bg-celda, #95a5a6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -79,7 +79,7 @@ body {
 }
 
 .celda:hover:not(.revealed):not(.locked) {
-  background-color: #bdc3c7;
+  background-color: var(--bg-container, #bdc3c7);
 }
 
 .celda.locked {
@@ -87,12 +87,12 @@ body {
 }
 
 .celda.revealed {
-  background-color: #fafbfa;
+  background-color: var(--bg-celda-revealed, #fafbfa);
   cursor: default;
 }
 
 .celda.mine {
-  background-color: #e74c3c;
+  background-color: var(--bg-celda-mine, #e74c3c);
 }
 
 #menu-bar {
@@ -103,8 +103,8 @@ body {
   max-width: 520px;
   padding: 10px 14px;
   margin-top: 18px;
-  background: linear-gradient(180deg, rgba(189, 195, 199, 0.96), rgba(149, 165, 166, 0.96));
-  border: 3px solid #7f8c8d;
+  background: linear-gradient(180deg, var(--bg-menu-start, #bdc3c7), var(--bg-celda, #95a5a6));
+  border: 3px solid var(--border-primary, #7f8c8d);
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
   box-sizing: border-box;
   gap: 12px;
@@ -125,9 +125,9 @@ body {
   font-weight: bold;
   letter-spacing: 0.3px;
   text-transform: uppercase;
-  color: #f4f7f7;
-  background: linear-gradient(180deg, #5d6d7e, #34495e);
-  border: 2px outset #95a5a6;
+  color: var(--color-menu-text, #f4f7f7);
+  background: linear-gradient(180deg, var(--bg-celda, #95a5a6), var(--bg-main, #34495e));
+  border: 2px outset var(--bg-celda, #95a5a6);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
   border-radius: 0;
   display: inline-block;
@@ -149,7 +149,7 @@ body {
   font-weight: bold;
   text-transform: uppercase;
   color: #1f2d3a;
-  background: linear-gradient(180deg, #ecf0f1, #bdc3c7);
+  background: linear-gradient(180deg, var(--bg-btn-start, #ecf0f1), var(--bg-menu-start, #bdc3c7));
   border: 2px outset #f1f2f4;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
   border-radius: 0;
@@ -171,17 +171,17 @@ body {
   max-width: 520px;
   padding: 8px 14px;
   margin-top: 5px;
-  background: linear-gradient(180deg, rgba(189, 195, 199, 0.96), rgba(149, 165, 166, 0.96));
-  border: 3px solid #7f8c8d;
+  background: linear-gradient(180deg, var(--bg-menu-start, #bdc3c7), var(--bg-celda, #95a5a6));
+  border: 3px solid var(--border-primary, #7f8c8d);
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
   box-sizing: border-box;
 }
 
 .user-greeting-msg {
   font-weight: bold;
-  color: #2c3e50;
-  background: linear-gradient(180deg, #ecf0f1, #bdc3c7);
-  border: 2px inset #95a5a6;
+  color: var(--color-greeting, #2c3e50);
+  background: linear-gradient(180deg, var(--bg-btn-start, #ecf0f1), var(--bg-menu-start, #bdc3c7));
+  border: 2px inset var(--bg-celda, #95a5a6);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
   padding: 4px 12px;
   cursor: default;
