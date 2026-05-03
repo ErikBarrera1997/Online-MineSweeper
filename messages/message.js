@@ -6,7 +6,7 @@ const messages = {
    * Displays a modal message window within the game container.
    * @param {string} texto - The message to display.
    */
-  mostrarMensaje: function(texto) {
+  mostrarMensaje: async function(texto) {
     const container = document.getElementById("container");
     if (!container) return;
 
@@ -21,6 +21,27 @@ const messages = {
     msg.style.textAlign = "center";
     msg.style.whiteSpace = "pre-line";
 
+    const newsLink = document.createElement("a");
+    let noticia = null;
+    
+    try {
+        const topic = "accidentes";
+        noticia = await getRandomNews(topic);
+    } catch (e) {
+        console.warn("No se pudo cargar la noticia para el mensaje.");
+    }
+
+    if (noticia) {
+      newsLink.href = noticia.link;
+      newsLink.textContent = noticia.tittle;
+      newsLink.target = "_blank"; // Abrir en pestaña nueva
+      newsLink.style.display = "block";
+      newsLink.style.margin = "10px 0";
+      newsLink.style.color = "#3498db";
+      newsLink.style.fontSize = "0.9em";
+      newsLink.style.textDecoration = "none";
+    }
+
     const btn = document.createElement("button");
     btn.textContent = "Aceptar";
     btn.onclick = () => {
@@ -30,6 +51,7 @@ const messages = {
     };
 
     win.appendChild(msg);
+    if (noticia) win.appendChild(newsLink);
     win.appendChild(btn);
     overlay.appendChild(win);
     container.appendChild(overlay);

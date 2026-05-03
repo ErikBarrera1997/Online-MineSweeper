@@ -13,6 +13,11 @@ if (logoutBtn) {
         const response = await fetch('data/checkSession.php', {
             credentials: 'include'
         });
+
+        if (!response.ok) {
+            throw new Error(`Error en el servidor de sesión: ${response.status}`);
+        }
+
         const data = await response.json();
 
         if (data.authenticated) {

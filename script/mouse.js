@@ -5,7 +5,6 @@
  */
 function handleRightClick(event) {
     const celda = event.target.closest('.celda');
-    
     // No permitir poner banderas en celdas reveladas o si el juego terminó
     if (!celda || celda.classList.contains("revealed") || celda.classList.contains("locked")) return;
 

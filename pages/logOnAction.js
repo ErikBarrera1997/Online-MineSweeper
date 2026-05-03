@@ -12,8 +12,8 @@ if (peekButton && passwordInput) {
 
         hidePasswordTimeout = window.setTimeout(() => {
             passwordInput.type = 'password';
-            peekButton.textContent = 'Ver 3 seg';
-        }, 3000);
+            peekButton.textContent = 'Ver';
+        }, 1000);
     });
 }
 
@@ -32,7 +32,7 @@ if (logonForm) {
             });
             const data = await response.json();
             if (data.success) {
-                alert('Usuario creado exitosamente');
+                alert('Usuario creado con éxito. Ahora puedes iniciar sesión');
                 window.location.href = './LogIn.html';
             } else {
                 alert(data.message);

@@ -2,6 +2,8 @@
 const AUDIO_LIST = {
 	creepy: "assets/creepy.ogg",
 	null: "assets/null.ogg",
+	theme1: "assets/theme1.ogg",
+	intro: "assets/intro.ogg"
 };
 
 const AUDIO_CACHE = {};
@@ -29,10 +31,20 @@ async function preloadAudio() {
 	});
 }
 
+function isAudioPlaying(audioName) {
+	const audio = AUDIO_CACHE[audioName];
+	return audio && !audio.paused && !audio.ended;
+}
+
 function playAudio(audioName) {
 	const audio = AUDIO_CACHE[audioName];
 	if (!audio) {
 		console.warn("Audio no precargado:", audioName);
+		return;
+	}
+
+	// No permitir que suene nada más si el intro está en curso
+	if (audioName !== "intro" && isAudioPlaying("intro")) {
 		return;
 	}
 
@@ -45,7 +57,7 @@ function playAudio(audioName) {
 
 		if (playPromise !== undefined) {
 			playPromise.catch((err) => {
-				console.warn("Audio Engine: Error/Bloqueo del navegador:", err.message);
+				console.log("Audio Engine: Reproducción en espera de interacción del usuario.");
 			});
 		}
 	}
@@ -66,21 +78,21 @@ function unlockAudioContext() {
 
 	console.log("Audio Engine: Intentando desbloqueo...");
 
-	// Intentamos reproducir todos los audios y esperamos a que al menos uno responda
-	const unlockPromises = audios.map((audio) => {
-		return audio.play().then(() => {
-			audio.pause();
-			audio.currentTime = 0;
-		}).catch(() => {
-			// Fallo silencioso si el navegador aún bloquea
-		});
+	// Intentamos iniciar el intro específicamente al primer click si estaba bloqueado
+	playAudio("intro");
+
+	// Desbloqueo silencioso del resto de sonidos sin reiniciar los que ya estén sonando
+	audios.forEach((audio) => {
+		if (audio.paused) {
+			audio.play().then(() => {
+				audio.pause();
+				audio.currentTime = 0;
+			}).catch(() => {});
+		}
 	});
 
-	Promise.all(unlockPromises).then(() => {
-		console.log("Audio Engine: Sistema desbloqueado con éxito.");
-		window.removeEventListener("click", unlockAudioContext);
-		window.removeEventListener("touchstart", unlockAudioContext);
-	});
+	window.removeEventListener("click", unlockAudioContext);
+	window.removeEventListener("touchstart", unlockAudioContext);
 }
 
 window.addEventListener("click", unlockAudioContext);
