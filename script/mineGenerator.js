@@ -1,7 +1,5 @@
-
-let percent = 15; // Probabilidad de colocar una mina (0-100)
-
 function generate(){
+    const percent = GAME_SETTINGS.MINES.PROBABILITY;
     let r = Math.random();   
 	let c = Math.floor(r * 100);
 	  

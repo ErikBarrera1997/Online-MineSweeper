@@ -1,26 +1,17 @@
-    let count = 0;
-	let increment = 1; // valor por defecto.
-	let activated = false;
+let chronometerCount = 0;
+let chronometerIncrement = 1;
 
-	function getCount(){
-		count += increment;
-		return count;
-	}
+function getChronometerTick() {
+	chronometerCount += chronometerIncrement;
+	return chronometerCount;
+}
 
-	function isActivated(){
-		return activated;
+function setChronometerIncrement(value) {
+	if (typeof value === "number" && !Number.isNaN(value)) {
+		chronometerIncrement = value;
 	}
+}
 
-	function setActivated(status){
-		activated = status;
-	}
-
-	function setIncrement(value) {
-		if (typeof value === "number" && !Number.isNaN(value)) {
-			increment = value;
-		}
-	}
-
-	function reset(){
-		count = 0;
-	}
+function resetChronometer() {
+	chronometerCount = 0;
+}
