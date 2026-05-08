@@ -6,13 +6,12 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/messageStyles.css">
   <link rel="stylesheet" href="css/match.css">
- 
 </head>
 <body>
 
   <nav id="menu-bar">
     <div class="menu-items">
-      <span id="menu-item-partida" class="menu-item">Partida</span>
+      <span id="menu-item-partida" class="menu-item" role="button" tabindex="0">Partida</span>
       <span class="menu-item">Opciones</span>
       <span class="menu-item">Acerca de</span>
     </div>
@@ -24,63 +23,14 @@
     <button id="logout-btn" class="logout-button" type="button">Log Out</button>
   </div>
 
-  <div id="container">     
+  <div id="container">
     <div id="stats">
-        <div id="timer">000</div>
-        <div id="reset"></div>
-        <div id="mines">000</div>
+      <div id="timer">000</div>
+      <div id="reset"></div>
+      <div id="mines">000</div>
     </div>
     <div id="field"></div>
-
-    <div id="game-settings-backdrop" class="game-settings-backdrop hidden" aria-hidden="true">
-      <div
-        id="game-settings-modal"
-        class="game-settings-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Configuración de partida"
-        tabindex="-1"
-      >
-        <div class="game-settings-preview-frame">
-          <div id="game-settings-preview" class="game-settings-preview"></div>
-        </div>
-
-        <div class="game-settings-row">
-          <label class="game-settings-label" for="board-size-select">Tamaño:</label>
-          <select id="board-size-select" class="game-settings-input">
-            <option value="9x9">Pequeño (9 x 9)</option>
-            <option value="15x15">Mediano (15 x 15)</option>
-            <option value="15x30">Grande (15 x 30)</option>
-          </select>
-        </div>
-
-        <div class="game-settings-row game-settings-row-slider">
-          <label class="game-settings-label" for="mine-probability-slider">Minas</label>
-          <input
-            id="mine-probability-slider"
-            class="game-settings-slider"
-            type="range"
-            min="1"
-            max="50"
-            value="15"
-          >
-          <span id="mine-probability-value" class="game-settings-slider-value">15</span>
-        </div>
-
-        <div class="game-settings-row">
-          <label class="game-settings-label" for="time-mode-select">Tiempo</label>
-          <select id="time-mode-select" class="game-settings-input">
-            <option value="COUNTDOWN">COUNTDOWN</option>
-            <option value="CHRONOMETER">CHRONOMETER</option>
-          </select>
-        </div>
-
-        <div class="game-settings-actions">
-          <button id="game-settings-accept" class="game-settings-button" type="button">Aceptar</button>
-          <button id="game-settings-cancel" class="game-settings-button" type="button">Cancelar</button>
-        </div>
-      </div>
-    </div>
+    <div id="options-modal-root"></div>
   </div>
 
   <script src="data/authGuard.js"></script>

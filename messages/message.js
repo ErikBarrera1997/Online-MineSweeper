@@ -55,6 +55,13 @@ const messages = {
     win.appendChild(btn);
     overlay.appendChild(win);
     container.appendChild(overlay);
+  },
+
+  /**
+   * Shows a message indicating that the player has run out of time.
+   */
+  mostrarTiempoAgotado: function() {
+    this.mostrarMensaje("¡Tiempo agotado!\nNo has logrado despejar el campo de minas a tiempo.\n\nInténtalo de nuevo.");
   }
 };
 

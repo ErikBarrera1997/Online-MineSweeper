@@ -32,7 +32,6 @@ function startTimer() {
 	}
 
 	timerIntervalId = setInterval(() => {
-		//console.log("Timer: {tick: ", tick, ", targetId: ", targetId, ", intervalMs: ", intervalMs, "}");
 		if (typeof tick !== "function") return;
 		const value = tick();
 		const el = document.getElementById(targetId);
@@ -45,6 +44,19 @@ function startTimer() {
 
 		if (value === null || typeof value === "undefined") return;
 		el.textContent = value.toString().padStart(3, "0");
+
+		//Will show a window message when one of time systems are active and finished
+		if(isCountdownActive() && isCountdownFinished()) {
+			stopTimer();
+			restrict(); 
+			messages.mostrarTiempoAgotado();
+			setCountdownFinished(false);
+		} else if (isChronometerActive() && isChronometerFinished()) {
+			stopTimer();
+			restrict(); //Blocks the board to prevent further interactions after time is up
+			messages.mostrarTiempoAgotado();
+			setChronometerFinished(false);
+		}
 	}, intervalMs);
 }
 

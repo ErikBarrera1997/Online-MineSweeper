@@ -1,28 +1,41 @@
-let countdownSeconds = GAME_SETTINGS.TIME.INITIAL_SECONDS;
-let countdownMinutes = GAME_SETTINGS.TIME.INITIAL_MINUTES;
+let chronometerTotalSeconds = 0;
+let chronometerIncrement = 1;
 
-function getCountdownTick() {
-	const currentValue = `${countdownMinutes}:${countdownSeconds.toString().padStart(2, "0")}`;
+let chronometerActive = false;
+let chronometerFinished = false;
 
-	if (countdownMinutes === 0 && countdownSeconds === 0) {
-		return currentValue;
-	}
-
-	countdownSeconds--;
-	if (countdownSeconds < 0) {
-		countdownMinutes -= 1;
-		countdownSeconds = 59;
-	}
-
-	if (countdownMinutes < 0) {
-		countdownMinutes = 0;
-		countdownSeconds = 0;
-	}
-
-	return currentValue;
+function getChronometerTick() {
+    chronometerTotalSeconds += chronometerIncrement;
+    
+    if (chronometerTotalSeconds > 999) {
+        chronometerTotalSeconds = 999;
+    }
+    return chronometerTotalSeconds;
 }
 
-function resetCountdown() {
-	countdownMinutes = GAME_SETTINGS.TIME.INITIAL_MINUTES;
-	countdownSeconds = GAME_SETTINGS.TIME.INITIAL_SECONDS;
+function setChronometerIncrement(value) {
+    if (typeof value === "number" && !Number.isNaN(value)) {
+        chronometerIncrement = value;
+    }
+}
+
+function resetChronometer() {
+    chronometerTotalSeconds = 0;
+    chronometerFinished = false;
+}
+
+function isChronometerActive() {
+	return chronometerActive;
+}
+
+function setChronometerActive(value) {
+	chronometerActive = value;
+}
+
+function isChronometerFinished() {
+	return chronometerFinished;
+}
+
+function setChronometerFinished(value) {
+	chronometerFinished = value;
 }

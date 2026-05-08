@@ -1,21 +1,5 @@
 let tablero = [];
 
-function getBoardRows() {
-  return GAME_SETTINGS.BOARD.ROWS;
-}
-
-function getBoardColumns() {
-  return GAME_SETTINGS.BOARD.COLUMNS;
-}
-
-function getTotalCellsCount() {
-  return getBoardRows() * getBoardColumns();
-}
-
-function getCellSize() {
-  return GAME_SETTINGS.BOARD.CELL_SIZE;
-}
-
 function generarTablero() {
   const filas = getBoardRows();
   const columnas = getBoardColumns();
@@ -163,6 +147,22 @@ function resetMatch() {
   generarCeldas();
   applyCurrentTimerMode();
   startTimer();
+}
+
+function getBoardRows() {
+  return GAME_SETTINGS.BOARD.ROWS;
+}
+
+function getBoardColumns() {
+  return GAME_SETTINGS.BOARD.COLUMNS;
+}
+
+function getTotalCellsCount() {
+  return getBoardRows() * getBoardColumns();
+}
+
+function getCellSize() {
+  return GAME_SETTINGS.BOARD.CELL_SIZE;
 }
 
 document.getElementById("reset").addEventListener("click", () => {
