@@ -94,6 +94,7 @@ function revelarCelda(index) {
       messages.mostrarMensaje("¡Boom! Fin del juego.");
     }
     restrict();
+    return; // Finalize execution for mine case
   } else {
     celda.textContent = valor > 0 ? valor.toString() : "";
 
@@ -115,15 +116,25 @@ function revelarCelda(index) {
         }
       }
     }
-  }
 
-  setDiscoveredCells(1);
+    // Solo incrementamos y verificamos victoria si la celda es segura
+    setDiscoveredCells(1);
 
-  if (getDiscoveredCells() === getTotalCells()) {
-    restrict();
-    stopTimer();
-    messages.mostrarMensaje("¡Felicidades!\nHas ganado el juego.\n\nPuntuación: " +
-      getScore().toFixed(2) + " puntos.");
+    if (getDiscoveredCells() === getTotalCells()) {
+      restrict();
+      stopTimer();
+      const finalScore = getScore();
+      
+      // Movemos el guardado al callback del mensaje
+      messages.mostrarMensaje("¡Felicidades!\nHas ganado el juego.\n\nPuntuación: " +
+        finalScore.toFixed(2) + " puntos.", () => {
+          if (typeof saveScore === 'function') {
+              saveScore(finalScore);
+          } else {
+              console.warn("La función saveScore no está disponible.");
+          }
+      });
+    }
   }
 }
 

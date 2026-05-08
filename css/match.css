@@ -143,3 +143,29 @@ body.modal-open .auth-section {
   transform: translateY(1px);
   background: linear-gradient(180deg, #6f8193, #41586e);
 }
+
+/* Estilos para la notificación Toast */
+.toast-notification {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-menu-start);
+  color: var(--color-menu-text);
+  padding: 12px 25px;
+  border: 3px solid var(--border-primary);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  pointer-events: none;
+  animation: slideUpFade 0.4s ease-out;
+}
+
+@keyframes slideUpFade {
+  from { bottom: 0; opacity: 0; }
+  to { bottom: 30px; opacity: 1; }
+}

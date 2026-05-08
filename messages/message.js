@@ -5,8 +5,9 @@ const messages = {
   /**
    * Displays a modal message window within the game container.
    * @param {string} texto - The message to display.
+   * @param {Function} callback - Function to execute when "Aceptar" is clicked.
    */
-  mostrarMensaje: async function(texto) {
+  mostrarMensaje: async function(texto, callback) {
     const container = document.getElementById("container");
     if (!container) return;
 
@@ -48,6 +49,7 @@ const messages = {
       overlay.remove();
       stopAudio("null");
       stopAudio("creepy");
+      if (typeof callback === "function") callback();
     };
 
     win.appendChild(msg);
@@ -62,6 +64,25 @@ const messages = {
    */
   mostrarTiempoAgotado: function() {
     this.mostrarMensaje("¡Tiempo agotado!\nNo has logrado despejar el campo de minas a tiempo.\n\nInténtalo de nuevo.");
+  },
+
+  /**
+   * Muestra una notificación temporal en la parte inferior de la pantalla.
+   * @param {string} mensaje - Texto a mostrar.
+   * @param {number} duracion - Tiempo en ms antes de desaparecer.
+   */
+  mostrarNotificacion: function(mensaje, duracion = 3500) {
+    const notification = document.createElement("div");
+    notification.className = "toast-notification";
+    notification.textContent = mensaje;
+    document.body.appendChild(notification);
+
+    // Desvanecer y eliminar
+    setTimeout(() => {
+      notification.style.transition = "opacity 0.5s ease";
+      notification.style.opacity = "0";
+      setTimeout(() => notification.remove(), 500);
+    }, duracion);
   }
 };
 
