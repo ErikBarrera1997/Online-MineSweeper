@@ -17,6 +17,8 @@ let sizeSelect = null;
 let minesSlider = null;
 let minesValue = null;
 let timeModeSelect = null;
+let countdownMinutesRow = null;
+let countdownMinutesInput = null;
 let previewGrid = null;
 let acceptSettingsBtn = null;
 let cancelSettingsBtn = null;
@@ -32,6 +34,17 @@ function setSliderValueLabel(value) {
     if (minesValue) {
         minesValue.textContent = value.toString();
     }
+}
+
+function sanitizeMinutesInput(value) {
+    return value.replace(/\D/g, "").slice(0, 2);
+}
+
+function toggleCountdownMinutesField() {
+    if (!countdownMinutesRow || !timeModeSelect) return;
+
+    const isCountdown = timeModeSelect.value === "COUNTDOWN";
+    countdownMinutesRow.classList.toggle("hidden", !isCountdown);
 }
 
 function renderPreviewGrid(rows, columns) {
@@ -54,12 +67,14 @@ function renderPreviewGrid(rows, columns) {
 }
 
 function syncModalWithSettings() {
-    if (!sizeSelect || !minesSlider || !timeModeSelect) return;
+    if (!sizeSelect || !minesSlider || !timeModeSelect || !countdownMinutesInput) return;
 
     sizeSelect.value = getBoardSizeKey(GAME_SETTINGS.BOARD.ROWS, GAME_SETTINGS.BOARD.COLUMNS);
     minesSlider.value = GAME_SETTINGS.MINES.PROBABILITY;
     setSliderValueLabel(GAME_SETTINGS.MINES.PROBABILITY);
     timeModeSelect.value = GAME_SETTINGS.TIME.IS_COUNTDOWN ? "COUNTDOWN" : "CHRONOMETER";
+    countdownMinutesInput.value = GAME_SETTINGS.TIME.INITIAL_MINUTES.toString();
+    toggleCountdownMinutesField();
 
     const selectedSize = BOARD_SIZE_OPTIONS[sizeSelect.value];
     renderPreviewGrid(selectedSize.rows, selectedSize.columns);
@@ -88,14 +103,44 @@ function closeSettingsModal() {
 }
 
 function applyGameSettings() {
-    if (!sizeSelect || !minesSlider || !timeModeSelect) return;
+    if (!sizeSelect || !minesSlider || !timeModeSelect || !countdownMinutesInput) return;
 
     const selectedSize = BOARD_SIZE_OPTIONS[sizeSelect.value];
+    const isCountdown = timeModeSelect.value === "COUNTDOWN";
+    const rawMinutesValue = countdownMinutesInput.value;
+    const digitsOnlyMinutes = rawMinutesValue.replace(/\D/g, "");
+    const sanitizedMinutes = sanitizeMinutesInput(rawMinutesValue);
+    const countdownMinutes = Number.parseInt(sanitizedMinutes, 10);
+
+    if (isCountdown) {
+        countdownMinutesInput.value = sanitizedMinutes;
+
+        if (digitsOnlyMinutes.length > 2) {
+            messages.mostrarMensajeSinNoticia("El tiempo en minutos no puede ser mayor a 99.", null, settingsModal);
+            countdownMinutesInput.focus();
+            return;
+        }
+
+        if (sanitizedMinutes.length === 0 || countdownMinutes === 0) {
+            messages.mostrarMensajeSinNoticia("El tiempo en minutos debe ser un entero entre 1 y 99.", null, settingsModal);
+            countdownMinutesInput.focus();
+            return;
+        }
+
+        if (countdownMinutes > 99) {
+            messages.mostrarMensajeSinNoticia("El tiempo en minutos no puede ser mayor a 99.", null, settingsModal);
+            countdownMinutesInput.focus();
+            return;
+        }
+    }
 
     GAME_SETTINGS.BOARD.ROWS = selectedSize.rows;
     GAME_SETTINGS.BOARD.COLUMNS = selectedSize.columns;
     GAME_SETTINGS.MINES.PROBABILITY = Number(minesSlider.value);
-    GAME_SETTINGS.TIME.IS_COUNTDOWN = timeModeSelect.value === "COUNTDOWN";
+    GAME_SETTINGS.TIME.IS_COUNTDOWN = isCountdown;
+    if (isCountdown) {
+        GAME_SETTINGS.TIME.INITIAL_MINUTES = countdownMinutes;
+    }
 
     closeSettingsModal();
     resetMatch();
@@ -108,6 +153,8 @@ function bindSettingsModal() {
     minesSlider = document.getElementById("mine-probability-slider");
     minesValue = document.getElementById("mine-probability-value");
     timeModeSelect = document.getElementById("time-mode-select");
+    countdownMinutesRow = document.getElementById("countdown-minutes-row");
+    countdownMinutesInput = document.getElementById("countdown-minutes-input");
     previewGrid = document.getElementById("game-settings-preview");
     acceptSettingsBtn = document.getElementById("game-settings-accept");
     cancelSettingsBtn = document.getElementById("game-settings-cancel");
@@ -122,6 +169,18 @@ function bindSettingsModal() {
     if (minesSlider) {
         minesSlider.addEventListener("input", () => {
             setSliderValueLabel(minesSlider.value);
+        });
+    }
+
+    if (timeModeSelect) {
+        timeModeSelect.addEventListener("change", () => {
+            toggleCountdownMinutesField();
+        });
+    }
+
+    if (countdownMinutesInput) {
+        countdownMinutesInput.addEventListener("input", () => {
+            countdownMinutesInput.value = sanitizeMinutesInput(countdownMinutesInput.value);
         });
     }
 

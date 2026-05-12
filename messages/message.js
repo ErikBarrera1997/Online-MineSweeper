@@ -2,15 +2,19 @@
  * Object containing messaging utility functions.
  */
 const messages = {
-  /**
-   * Displays a modal message window within the game container.
-   * @param {string} texto - The message to display.
-   * @param {Function} callback - Function to execute when "Aceptar" is clicked.
-   */
-  mostrarMensaje: async function(texto, callback) {
-    const container = document.getElementById("container");
-    if (!container) return;
+  getContainer(target = "container") {
+    if (target instanceof HTMLElement) {
+      return target;
+    }
 
+    if (typeof target === "string" && target.length > 0) {
+      return document.getElementById(target);
+    }
+
+    return document.getElementById("container");
+  },
+
+  createMessageElements(texto) {
     const overlay = document.createElement("div");
     overlay.className = "message-overlay";
 
@@ -22,40 +26,73 @@ const messages = {
     msg.style.textAlign = "center";
     msg.style.whiteSpace = "pre-line";
 
-    const newsLink = document.createElement("a");
-    let noticia = null;
-    
-    try {
-        const topic = "accidentes";
-        noticia = await getRandomNews(topic);
-    } catch (e) {
-        console.warn("No se pudo cargar la noticia para el mensaje.");
-    }
-
-    if (noticia) {
-      newsLink.href = noticia.link;
-      newsLink.textContent = noticia.tittle;
-      newsLink.target = "_blank"; // Abrir en pestaña nueva
-      newsLink.style.display = "block";
-      newsLink.style.margin = "10px 0";
-      newsLink.style.color = "#3498db";
-      newsLink.style.fontSize = "0.9em";
-      newsLink.style.textDecoration = "none";
-    }
-
     const btn = document.createElement("button");
     btn.textContent = "Aceptar";
+
+    win.appendChild(msg);
+    win.appendChild(btn);
+    overlay.appendChild(win);
+
+    return { overlay, win, btn };
+  },
+
+  attachCloseHandler(overlay, btn, callback) {
     btn.onclick = () => {
       overlay.remove();
       stopAudio("null");
       stopAudio("creepy");
       if (typeof callback === "function") callback();
     };
+  },
 
-    win.appendChild(msg);
-    if (noticia) win.appendChild(newsLink);
-    win.appendChild(btn);
-    overlay.appendChild(win);
+  /**
+   * Displays a modal message window within the game container.
+   * @param {string} texto - The message to display.
+   * @param {Function} callback - Function to execute when "Aceptar" is clicked.
+   */
+  mostrarMensaje: async function(texto, callback) {
+    const container = this.getContainer("container");
+    if (!container) return;
+
+    const { overlay, win, btn } = this.createMessageElements(texto);
+    let noticia = null;
+
+    try {
+      const topic = "accidentes";
+      noticia = await getRandomNews(topic);
+    } catch (e) {
+      console.warn("No se pudo cargar la noticia para el mensaje.");
+    }
+
+    if (noticia) {
+      const newsLink = document.createElement("a");
+      newsLink.href = noticia.link;
+      newsLink.textContent = noticia.tittle;
+      newsLink.target = "_blank";
+      newsLink.style.display = "block";
+      newsLink.style.margin = "10px 0";
+      newsLink.style.color = "#3498db";
+      newsLink.style.fontSize = "0.9em";
+      newsLink.style.textDecoration = "none";
+      win.insertBefore(newsLink, btn);
+    }
+
+    this.attachCloseHandler(overlay, btn, callback);
+    container.appendChild(overlay);
+  },
+
+  /**
+   * Displays the same modal message window without loading or showing a news link.
+   * @param {string} texto - The message to display.
+   * @param {Function} callback - Function to execute when "Aceptar" is clicked.
+   * @param {string|HTMLElement} target - The container id or element where the message should appear.
+   */
+  mostrarMensajeSinNoticia: function(texto, callback, target = "container") {
+    const container = this.getContainer(target);
+    if (!container) return;
+
+    const { overlay, btn } = this.createMessageElements(texto);
+    this.attachCloseHandler(overlay, btn, callback);
     container.appendChild(overlay);
   },
 
@@ -77,7 +114,6 @@ const messages = {
     notification.textContent = mensaje;
     document.body.appendChild(notification);
 
-    // Desvanecer y eliminar
     setTimeout(() => {
       notification.style.transition = "opacity 0.5s ease";
       notification.style.opacity = "0";
@@ -93,7 +129,6 @@ async function showSecretMessage() {
     const overlay = document.createElement("div");
     overlay.className = "message-overlay";
 
-    //image div
     const win = document.createElement("div");
     win.className = "message-window";
     win.style.backgroundColor = "#040404";
@@ -104,7 +139,6 @@ async function showSecretMessage() {
     win.style.borderRadius = "0";
     win.style.position = "relative";
 
-    //image size settings
     if (img) {
         img.style.width = "100%";
         img.style.height = "100%";
