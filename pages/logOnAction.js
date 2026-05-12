@@ -32,13 +32,14 @@ if (logonForm) {
             });
             const data = await response.json();
             if (data.success) {
-                alert('Usuario creado con éxito. Ahora puedes iniciar sesión');
-                window.location.href = './LogIn.html';
+                mostrarMensaje('Usuario creado con éxito. Ahora puedes iniciar sesión', 'success', () => {
+                    window.location.href = './LogIn.html';
+                });
             } else {
-                alert(data.message);
+                mostrarMensaje(data.message, 'error');
             }
         } catch (error) {
-            alert('Error de conexión: ' + error.message);
+            mostrarMensaje('Error de conexión: ' + error.message, 'error');
         }
     });
 }

@@ -18,19 +18,19 @@ $password = trim($_POST['password'] ?? '');
 
 try {
     if (empty($user_name)) {
-        throw new Exception("user_name is required");
+        throw new Exception("Ingrese un nombre de usuario");
     }
 
     if (empty($e_mail)) {
-        throw new Exception("e_mail is required");
+        throw new Exception("Ingrese un correo electrónico válido");
     }
 
     if (empty($password)) {
-        throw new Exception("password is required and cannot be null");
+        throw new Exception("Ingrese una contraseña, no puede estar vacía");
     }
 
     if (!filter_var($e_mail, FILTER_VALIDATE_EMAIL)) {
-        throw new Exception("Invalid email format");
+        throw new Exception("Formato de correo electrónico inválido");
     }
 
     $existing = supabase_get("MinesSweeperUserData", [
@@ -39,7 +39,7 @@ try {
     ]);
 
     if (is_array($existing) && count($existing) > 0) {
-        throw new Exception("User already exists with that user_name or e_mail");
+        throw new Exception("Ya existe un usuario con ese nombre o correo electrónico");
     }
 
     $result = supabase_post("MinesSweeperUserData", [
@@ -49,13 +49,13 @@ try {
     ]);
 
     if (isset($result['error'])) {
-        throw new Exception("Failed to create user: " . $result['error']);
+        throw new Exception("Error al crear el usuario: " . $result['error']);
     }
 
     http_response_code(201);
     echo json_encode([
         "success" => true,
-        "message" => "User created successfully",
+        "message" => "Usuario creado con éxito",
         "user" => $result
     ]);
 
