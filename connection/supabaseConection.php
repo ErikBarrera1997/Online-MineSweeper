@@ -10,6 +10,10 @@ function loadEnv($path) {
         error_log("Archivo .env no encontrado en: $path");
         return;
     }
+    // Si ya están cargadas (por el servidor o ejecución previa), saltar
+    if (isset($_ENV['SUPABASE_URL']) && isset($_ENV['SUPABASE_API_KEY'])) {
+        return;
+    }
     $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
         if (strpos(trim($line), '#') === 0) continue;
@@ -39,39 +43,52 @@ if (!empty($_POST)) {
 }
 
 /**
- * Make a GET request to Supabase REST API
- * @param string $table Table name
- * @param array $params Query parameters (e.g. ['select' => '*', 'id' => 'eq.1'])
- * @return array Decoded JSON response
+ * Función interna para centralizar las peticiones cURL.
  */
-function supabase_get($table, $params = []) {
+function supabase_request($method, $endpoint, $data = null, $extra_params = []) {
     global $supabase_url, $supabase_api_key;
-    
-    $query = http_build_query($params);
-    $url = "$supabase_url/rest/v1/$table" . ($query ? "?$query" : "");
-    
+
+    $query = !empty($extra_params) ? "?" . http_build_query($extra_params) : "";
+    $url = "$supabase_url/rest/v1/$endpoint$query";
+
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+
+    if ($data) {
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    }
+
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         "apikey: $supabase_api_key",
         "Authorization: Bearer $supabase_api_key",
         "Content-Type: application/json",
         "Prefer: return=representation"
     ]);
-    
+
     $response = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $error = curl_error($ch);
     curl_close($ch);
-    
+
     if ($error) {
-        error_log("Supabase GET error: $error");
+        error_log("Supabase $method error: $error");
         return ["error" => $error];
     }
-    
-    error_log("Supabase GET [$http_code] $url");
+
+    error_log("Supabase $method [$http_code] $url");
     return json_decode($response, true);
+}
+
+/**
+ * Make a GET request to Supabase REST API
+ * @param string $table Table name
+ * @param array $params Query parameters (e.g. ['select' => '*', 'id' => 'eq.1'])
+ * @return array Decoded JSON response
+ */
+function supabase_get($table, $params = []) {
+    return supabase_request("GET", $table, null, $params);
 }
 
 /**
@@ -81,34 +98,7 @@ function supabase_get($table, $params = []) {
  * @return array Decoded JSON response
  */
 function supabase_post($table, $data) {
-    global $supabase_url, $supabase_api_key;
-    
-    $url = "$supabase_url/rest/v1/$table";
-    
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "apikey: $supabase_api_key",
-        "Authorization: Bearer $supabase_api_key",
-        "Content-Type: application/json",
-        "Prefer: return=representation"
-    ]);
-    
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $error = curl_error($ch);
-    curl_close($ch);
-    
-    if ($error) {
-        error_log("Supabase POST error: $error");
-        return ["error" => $error];
-    }
-    
-    error_log("Supabase POST [$http_code] $url");
-    return json_decode($response, true);
+    return supabase_request("POST", $table, $data);
 }
 
 /**
@@ -119,35 +109,7 @@ function supabase_post($table, $data) {
  * @return array Decoded JSON response
  */
 function supabase_patch($table, $filters, $data) {
-    global $supabase_url, $supabase_api_key;
-    
-    $query = http_build_query($filters);
-    $url = "$supabase_url/rest/v1/$table?$query";
-    
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "apikey: $supabase_api_key",
-        "Authorization: Bearer $supabase_api_key",
-        "Content-Type: application/json",
-        "Prefer: return=representation"
-    ]);
-    
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $error = curl_error($ch);
-    curl_close($ch);
-    
-    if ($error) {
-        error_log("Supabase PATCH error: $error");
-        return ["error" => $error];
-    }
-    
-    error_log("Supabase PATCH [$http_code] $url");
-    return json_decode($response, true);
+    return supabase_request("PATCH", $table, $data, $filters);
 }
 
 /**
@@ -157,34 +119,7 @@ function supabase_patch($table, $filters, $data) {
  * @return array Decoded JSON response
  */
 function supabase_delete($table, $filters) {
-    global $supabase_url, $supabase_api_key;
-    
-    $query = http_build_query($filters);
-    $url = "$supabase_url/rest/v1/$table?$query";
-    
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "apikey: $supabase_api_key",
-        "Authorization: Bearer $supabase_api_key",
-        "Content-Type: application/json",
-        "Prefer: return=representation"
-    ]);
-    
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $error = curl_error($ch);
-    curl_close($ch);
-    
-    if ($error) {
-        error_log("Supabase DELETE error: $error");
-        return ["error" => $error];
-    }
-    
-    error_log("Supabase DELETE [$http_code] $url");
-    return json_decode($response, true);
+    return supabase_request("DELETE", $table, null, $filters);
 }
 
 if (basename($_SERVER['PHP_SELF']) === 'supabaseConection.php') {
