@@ -4,13 +4,61 @@ const passwordInput = document.getElementById('password');
 const peekButton = document.getElementById('peek-password');
 let hidePasswordTimeout;
 
+window.addEventListener('load', () => {
+    if (loginForm) loginForm.reset();
+    if (typeof redirectIfAuth === 'function') {
+        redirectIfAuth();
+    }
+});
+
+if (peekButton && passwordInput) {
+    peekButton.addEventListener('click', () => {
+        clearTimeout(hidePasswordTimeout);
+        passwordInput.type = 'text';
+        peekButton.textContent = 'Visible';
+
+        hidePasswordTimeout = window.setTimeout(() => {
+            passwordInput.type = 'password';
+            peekButton.textContent = 'Ver';
+        }, 3000);
+    });
+}
+
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        const emailInput = document.getElementById('email');
+        const emailError = document.getElementById('email-error');
+        const passwordError = document.getElementById('password-error');
+        
+        if (emailError) emailError.textContent = '';
+        if (passwordError) passwordError.textContent = '';
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+
+        if (!email) {
+            if (emailError) emailError.textContent = 'El correo es requerido';
+            return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            if (emailError) emailError.textContent = 'Ingresa un correo válido';
+            return;
+        }
+
+        if (!password) {
+            if (passwordError) passwordError.textContent = 'La contraseña es requerida';
+            return;
+        }
+
         const formData = new FormData(loginForm);
+        // Aseguramos que los nombres coincidan con lo que espera el PHP (e_mail)
+        formData.set('e_mail', email);
 
         try {
-            const response = await fetch('../connection/loginactions.php', {
+            const response = await fetch('../connection/loginAction.php', {
                 method: 'POST',
                 body: formData
             });
@@ -20,76 +68,19 @@ if (loginForm) {
             if (data.success) {
                 window.location.href = '../index.html';
             } else {
-                alert(data.message || 'Credenciales incorrectas');
+                if (typeof mostrarMensaje === 'function') {
+                    mostrarMensaje(data.message || 'Credenciales incorrectas', 'error');
+                } else {
+                    alert(data.message || 'Credenciales incorrectas');
+                }
             }
         } catch (error) {
             console.error('Login error:', error);
-            alert('Error al iniciar sesión. Intente más tarde');
+            if (typeof mostrarMensaje === 'function') {
+                mostrarMensaje('Error de conexión: ' + error.message, 'error');
+            } else {
+                alert('Error de conexión');
+            }
         }
     });
 }
-
-window.addEventListener('load', () => {
-  loginForm.reset();
-  redirectIfAuth();
-});
-
-peekButton.addEventListener('click', () => {
-  clearTimeout(hidePasswordTimeout);
-  passwordInput.type = 'text';
-  peekButton.textContent = 'Visible';
-
-  hidePasswordTimeout = window.setTimeout(() => {
-    passwordInput.type = 'password';
-    peekButton.textContent = 'Ver 3 seg';
-  }, 3000);
-});
-
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const emailInput = document.getElementById('email');
-  const emailError = document.getElementById('email-error');
-  const passwordError = document.getElementById('password-error');
-  emailError.textContent = '';
-  passwordError.textContent = '';
-
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
-
-  if (!email) {
-    emailError.textContent = 'El correo es requerido';
-    return;
-  }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    emailError.textContent = 'Ingresa un correo válido (ejemplo@dominio.com)';
-    return;
-  }
-
-  if (!password) {
-    passwordError.textContent = 'La contraseña es requerida';
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append('e_mail', email);
-  formData.append('password', password);
-
-  try {
-    const response = await fetch('../connection/loginAction.php', {
-      method: 'POST',
-      body: formData
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      window.location.href = '../index.html';
-    } else {
-      mostrarMensaje(data.message, 'error');
-    }
-  } catch (error) {
-    mostrarMensaje('Error de conexión: ' + error.message, 'error');
-  }
-});

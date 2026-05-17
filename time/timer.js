@@ -40,7 +40,12 @@ function startTimer() {
 		// Update the shared elapsed time in score.js to keep score accurate
 		setElapsedTime(1);
 
-		getRandomAudio(); // Play random audio on each tick
+		// Protegemos la llamada para que un error de audio no rompa el temporizador
+		try {
+			if (typeof getRandomAudio === 'function') getRandomAudio();
+		} catch (e) {
+			console.error("Audio Engine Error:", e);
+		}
 
 		if (value === null || typeof value === "undefined") return;
 		el.textContent = value.toString().padStart(3, "0");
