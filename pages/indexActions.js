@@ -202,7 +202,7 @@ function bindSettingsModal() {
 async function loadSettingsModal() {
     if (!optionsModalRoot) return;
 
-    const response = await fetch("pages/options.html", {
+    const response = await fetch("pages/match.html", {
         cache: "no-store"
     });
 
@@ -256,6 +256,10 @@ document.addEventListener("keydown", (event) => {
             if (loginBtn) loginBtn.style.display = "none";
             if (authSection) authSection.style.display = "flex";
             if (userGreeting) userGreeting.textContent = `Hola de nuevo '${data.user.user_name}'`;
+        } else {
+            //Returns to default state if not authenticated, just in case
+            if (loginBtn) loginBtn.style.display = "block";
+            if (authSection) authSection.style.display = "none";
         }
     } catch (error) {
         console.error("Session check failed:", error);

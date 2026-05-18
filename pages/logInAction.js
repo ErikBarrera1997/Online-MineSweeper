@@ -54,12 +54,12 @@ if (loginForm) {
         }
 
         const formData = new FormData(loginForm);
-        // Aseguramos que los nombres coincidan con lo que espera el PHP (e_mail)
         formData.set('e_mail', email);
 
         try {
             const response = await fetch('../connection/loginAction.php', {
                 method: 'POST',
+                credentials: 'include',
                 body: formData
             });
 

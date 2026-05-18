@@ -48,9 +48,15 @@ const messages = {
   /**
    * Displays a modal message window within the game container.
    * @param {string} texto - The message to display.
+   * @param {string} type - 'success', 'error', 'info', etc.
    * @param {Function} callback - Function to execute when "Aceptar" is clicked.
    */
-  mostrarMensaje: async function(texto, callback) {
+  mostrarMensaje: async function(texto, type = "info", callback = null) {
+    if (typeof type === "function") {
+        callback = type;
+        type = "info";
+    }
+
     const container = this.getContainer("container");
     if (!container) return;
 
@@ -104,9 +110,9 @@ const messages = {
   },
 
   /**
-   * Muestra una notificación temporal en la parte inferior de la pantalla.
-   * @param {string} mensaje - Texto a mostrar.
-   * @param {number} duracion - Tiempo en ms antes de desaparecer.
+   * Shows a temporary toast notification at the bottom of the screen.
+   * @param {string} mensaje 
+   * @param {number} duracion 
    */
   mostrarNotificacion: function(mensaje, duracion = 3500) {
     const notification = document.createElement("div");
@@ -153,6 +159,7 @@ async function showSecretMessage() {
     btn.style.bottom = "20px";
     btn.style.left = "50%";
     btn.style.transform = "translateX(-50%)";
+
     btn.onclick = () => {
         overlay.remove();
         stopAudio("null");

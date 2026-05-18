@@ -1,7 +1,7 @@
 <?php
 const COOKIE_NAME = "ms_session";
 const COOKIE_LIFETIME = 3600;
-const COOKIE_PATH = "/mineSweeper/";
+const COOKIE_PATH = "/";
 
 /**
  * Sets an HttpOnly session cookie for the authenticated user.
@@ -64,20 +64,20 @@ function verifySession() {
  * Destroys the session cookie.
  */
 function destroySession() {
-    setcookie(COOKIE_NAME, "", [
+    $options = [
         "expires" => time() - 3600,
-        "path" => COOKIE_PATH,
         "secure" => false,
         "httponly" => true,
         "samesite" => "Lax"
-    ]);
+    ];
 
-    setcookie(COOKIE_NAME, "", [
-        "expires" => time() - 3600,
-        "path" => "/",
-        "secure" => false,
-        "httponly" => true,
-        "samesite" => "Lax"
-    ]);
+    // Borrar en la ruta configurada (actualmente "/")
+    setcookie(COOKIE_NAME, "", array_merge($options, ["path" => COOKIE_PATH]));
+
+    // Borrar específicamente en las rutas probables del subdirectorio
+    // Esto limpia cookies antiguas que pudieran haber quedado con rutas distintas
+    setcookie(COOKIE_NAME, "", array_merge($options, ["path" => "/MineSweeper/"]));
+    setcookie(COOKIE_NAME, "", array_merge($options, ["path" => "/mineSweeper/"]));
+    setcookie(COOKIE_NAME, "", array_merge($options, ["path" => "/MineSweeper"]));
 }
 ?>

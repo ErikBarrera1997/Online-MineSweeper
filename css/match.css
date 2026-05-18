@@ -144,14 +144,13 @@ body.modal-open .auth-section {
   background: linear-gradient(180deg, #6f8193, #41586e);
 }
 
-/* Estilos para la notificación Toast */
 .toast-notification {
   position: fixed;
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--bg-menu-start);
-  color: var(--color-menu-text);
+  color: var(--color-greeting);
   padding: 12px 25px;
   border: 3px solid var(--border-primary);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);

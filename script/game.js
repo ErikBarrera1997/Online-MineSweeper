@@ -117,21 +117,19 @@ function revelarCelda(index) {
       }
     }
 
-    // Solo incrementamos y verificamos victoria si la celda es segura
     setDiscoveredCells(1);
 
     if (getDiscoveredCells() === getTotalCells()) {
       restrict();
       stopTimer();
       const finalScore = getScore();
-      
-      // Movemos el guardado al callback del mensaje
+
       messages.mostrarMensaje("¡Felicidades!\nHas ganado el juego.\n\nPuntuación: " +
-        finalScore.toFixed(2) + " puntos.", () => {
+        finalScore.toFixed(2) + " puntos.", "success", () => {
           if (typeof saveScore === 'function') {
               saveScore(finalScore);
           } else {
-              console.warn("La función saveScore no está disponible.");
+              console.warn("La función save Score no está disponible.");
           }
       });
     }

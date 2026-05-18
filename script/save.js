@@ -10,33 +10,27 @@ async function saveScore(score) {
     let userName = null;
 
     try {
-        // Intentamos recuperar el nombre de usuario desde la sesión actual
-        try {
-            const authRes = await fetch(`${dataPath}/checkSession.php`, { credentials: 'include' });
-            const authData = await authRes.json();
-            if (authData.authenticated && authData.user) {
-                userName = authData.user.user_name;
-            }
-        } catch (e) {
-            console.warn("No se pudo recuperar la sesión, se registrará con user_name como null.");
+        const authRes = await fetch(`${dataPath}/checkSession.php`, { credentials: 'include' });
+        const authData = await authRes.json();
+
+        if (!authData.authenticated || !authData.user) {
+            console.log("Guardado cancelado: El usuario no ha iniciado sesión.");
+            return;
         }
+
+        userName = authData.user.user_name;
 
         const formData = new FormData();
-        
-        // Si userName es null, evitamos enviarlo para que el servidor lo trate como nulo
-        if (userName !== null) {
-            formData.append('user_name', userName);
-        }
-        
+        formData.append('user_name', userName);
         formData.append('score', score);
 
-        // Realizamos el envío a scoresactions.php (encargado del CRUD de Scores)
         const response = await fetch(`${connectionPath}/scoresactions.php`, {
             method: 'POST',
+            credentials: 'include',
             body: formData
         });
 
-        // Validamos que la respuesta del servidor sea exitosa antes de intentar leer JSON
+
         if (!response.ok) {
             throw new Error(`Servidor respondió con status ${response.status} (Posible archivo no encontrado)`);
         }
@@ -48,6 +42,7 @@ async function saveScore(score) {
         } else {
             console.error("El servidor rechazó el guardado:", result.error);
         }
+
     } catch (error) {
         console.error("Error crítico en save.js:", error.message || error);
     }
