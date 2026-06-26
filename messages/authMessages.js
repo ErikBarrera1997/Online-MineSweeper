@@ -28,3 +28,17 @@ function mostrarMensaje(texto, type = "info", onAccept = null) {
   overlay.appendChild(win);
   document.body.appendChild(overlay);
 }
+
+async function verificarSesion() {
+  const basePath = window.location.pathname.includes('/pages/') ? '../data' : 'data';
+  try {
+    const res = await fetch(basePath + '/checkSession.php', { credentials: 'include' });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.authenticated ? data.user : null;
+  } catch {
+    return null;
+  }
+}
+
+

@@ -33,7 +33,7 @@ try {
         throw new Exception("Formato de correo electrónico inválido");
     }
 
-    $existing = supabase_get("MinesSweeperUserData", [
+    $existing = supabase_get("MagicWorldUsers", [
         "user_name" => "eq.$user_name",
         "e_mail" => "eq.$e_mail"
     ]);
@@ -42,7 +42,7 @@ try {
         throw new Exception("Ya existe un usuario con ese nombre o correo electrónico");
     }
 
-    $result = supabase_post("MinesSweeperUserData", [
+    $result = supabase_post("MagicWorldUsers", [
         "user_name" => $user_name,
         "e_mail" => $e_mail,
         "password" => $password

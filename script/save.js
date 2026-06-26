@@ -3,7 +3,6 @@
  * @param {number} score - La puntuación calculada al finalizar la partida.
  */
 async function saveScore(score) {
-    console.log("Iniciando proceso de guardado para la puntuación:", score);
     const isInsidePages = window.location.pathname.includes('/pages/');
     const dataPath = isInsidePages ? '../data' : 'data';
     const connectionPath = isInsidePages ? '../connection' : 'connection';
@@ -14,7 +13,6 @@ async function saveScore(score) {
         const authData = await authRes.json();
 
         if (!authData.authenticated || !authData.user) {
-            console.log("Guardado cancelado: El usuario no ha iniciado sesión.");
             return;
         }
 

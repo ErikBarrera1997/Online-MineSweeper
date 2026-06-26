@@ -13,9 +13,18 @@ if (!$session) {
     exit;
 }
 
-$result = supabase_get("MinesSweeperUserData", [
+$result = supabase_get("MagicWorldUsers", [
     "e_mail" => "eq." . $session["e_mail"]
 ]);
+
+if (is_array($result) && isset($result['error'])) {
+    http_response_code(500);
+    echo json_encode([
+        "authenticated" => false,
+        "error" => $result['error']
+    ]);
+    exit;
+}
 
 if (!is_array($result) || count($result) === 0) {
     destroySession();

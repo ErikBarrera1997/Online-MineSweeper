@@ -30,7 +30,7 @@ try {
         throw new Exception("Debe de ingresar la contraseña");
     }
 
-    $result = supabase_get("MinesSweeperUserData", [
+    $result = supabase_get("MagicWorldUsers", [
         "e_mail" => "eq.$e_mail"
     ]);
 

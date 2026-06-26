@@ -1,24 +1,20 @@
 <?php
-// Evitar que errores de PHP rompan el JSON de salida
-error_reporting(0);
-ini_set('display_errors', 0);
 header('Content-Type: application/json');
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
 
-// Cargar las variables del archivo .env
 $envPath = __DIR__ . '/../.env';
 if (!file_exists($envPath)) {
-    echo json_encode(['error' => 'Archivo .env no encontrado']);
+    echo json_encode(['error' => '.env file not found']);
     exit;
 }
 
-// Cargamos el .env manualmente porque parse_ini_file falla con comentarios '#' en PHP moderno
 $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 $config = [];
 foreach ($lines as $line) {
     $line = trim($line);
     if (empty($line) || strpos($line, '#') === 0) continue;
-    
-    // Dividir solo por el primer '='
+
     $parts = explode('=', $line, 2);
     if (count($parts) === 2) {
         $config[trim($parts[0])] = trim($parts[1], " \t\n\r\0\x0B\"'");
@@ -29,33 +25,32 @@ $apiKey = $config['NEWS_API_KEY'] ?? '';
 $baseUrl = $config['NEWS_API_URL'] ?? '';
 
 if (empty($apiKey)) {
-    echo json_encode(['error' => 'API Key no configurada']);
+    echo json_encode(['error' => 'API Key not configured']);
     exit;
 }
 
-// Obtener el término de búsqueda enviado desde el JS
 $keyword = $_GET['q'] ?? '';
-
-// NewsAPI requiere obligatoriamente un User-Agent y XAMPP suele fallar con SSL
-$opts = [
-    "http" => [
-        "method" => "GET",
-        "header" => "User-Agent: MineSweeper-App/1.0\r\n"
-    ],
-    "ssl" => [
-        "verify_peer" => false,
-        "verify_peer_name" => false,
-    ]
-];
-
-$context = stream_context_create($opts);
 $url = $baseUrl . "?q=" . urlencode($keyword) . "&searchIn=title&language=es&apiKey=" . $apiKey;
-$response = @file_get_contents($url, false, $context);
 
-if ($response === false) {
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_USERAGENT, 'MineSweeper-App/1.0');
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$curlError = curl_error($ch);
+curl_close($ch);
+
+if ($response === false || $curlError) {
     http_response_code(500);
-    echo json_encode(['error' => 'Error al conectar con NewsAPI']);
+    echo json_encode(['error' => 'Error connecting to NewsAPI', 'detail' => $curlError]);
+} elseif ($httpCode !== 200) {
+    http_response_code(500);
+    echo json_encode(['error' => 'NewsAPI responded with status ' . $httpCode]);
 } else {
-    // Devolver la respuesta original al navegador
     echo $response;
 }

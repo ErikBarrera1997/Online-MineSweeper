@@ -22,7 +22,7 @@ async function getRandomNews(keyword = 'accidentes') {
 
         // Returns an object with the title and link of the news article
         return {
-            tittle: news.title,
+            title: news.title,
             link: news.url
         };
     } catch (error) {

@@ -11,6 +11,12 @@
 !*.js
 !*.php
 !*.txt
+!package.json
+!vite.config.js
+
+# Node modules and build output
+node_modules/
+dist/
 
 # Allow image formats
 !*.png

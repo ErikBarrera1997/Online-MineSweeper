@@ -10,7 +10,6 @@ const messages = {
     if (typeof target === "string" && target.length > 0) {
       return document.getElementById(target);
     }
-
     return document.getElementById("container");
   },
 
@@ -73,7 +72,7 @@ const messages = {
     if (noticia) {
       const newsLink = document.createElement("a");
       newsLink.href = noticia.link;
-      newsLink.textContent = noticia.tittle;
+      newsLink.textContent = noticia.title;
       newsLink.target = "_blank";
       newsLink.style.display = "block";
       newsLink.style.margin = "10px 0";

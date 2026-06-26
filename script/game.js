@@ -64,7 +64,7 @@ function generarCeldas() {
   });
 }
 
-function revelarCelda(index) {
+async function revelarCelda(index) {
   const columnas = getBoardColumns();
   const filas = getBoardRows();
   const celda = document.getElementById(`celda-${index}`);
@@ -124,8 +124,13 @@ function revelarCelda(index) {
       stopTimer();
       const finalScore = getScore();
 
-      messages.mostrarMensaje("¡Felicidades!\nHas ganado el juego.\n\nPuntuación: " +
-        finalScore.toFixed(2) + " puntos.", "success", () => {
+      const sessionUser = await verificarSesion();
+      let winText = "¡Felicidades!\nHas ganado el juego.\n\nPuntuación: " +
+        finalScore.toFixed(2) + " puntos.";
+      if (!sessionUser) {
+        winText += "\n\nInicia sesión para guardar la puntuación";
+      }
+      messages.mostrarMensaje(winText, "success", () => {
           if (typeof saveScore === 'function') {
               saveScore(finalScore);
           } else {
