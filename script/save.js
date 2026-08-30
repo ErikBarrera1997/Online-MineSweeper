@@ -36,9 +36,10 @@ async function saveScore(score) {
         const result = await response.json();
         if (result.success) {
             console.log("Servidor:", result.message);
-            messages.mostrarNotificacion("Puntuación guardada con éxito");
+            messages.mostrarNotificacion("¡Puntuación guardada con éxito!");
         } else {
             console.error("El servidor rechazó el guardado:", result.error);
+            messages.mostrarNotificacion("No se pudo guardar la puntuación");
         }
 
     } catch (error) {

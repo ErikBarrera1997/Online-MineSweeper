@@ -181,7 +181,7 @@ body {
   font-weight: bold;
   color: var(--color-greeting, #2c3e50);
   background: linear-gradient(180deg, var(--bg-btn-start, #ecf0f1), var(--bg-menu-start, #bdc3c7));
-  border: 2px inset var(--bg-celda, #95a5a6);
+  /*border: 2px inset var(--bg-celda, #95a5a6);*/
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
   padding: 4px 12px;
   cursor: default;

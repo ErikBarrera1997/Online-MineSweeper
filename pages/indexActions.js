@@ -247,7 +247,7 @@ document.addEventListener("keydown", (event) => {
         });
 
         if (!response.ok) {
-            throw new Error(`Error en el servidor de sesión: ${response.status}`);
+            throw new Error(`Error en el servidor: ${response.status}`);
         }
 
         const data = await response.json();
@@ -255,7 +255,7 @@ document.addEventListener("keydown", (event) => {
         if (data.authenticated) {
             if (loginBtn) loginBtn.style.display = "none";
             if (authSection) authSection.style.display = "flex";
-            if (userGreeting) userGreeting.textContent = `Hola de nuevo '${data.user.user_name}'`;
+            if (userGreeting) userGreeting.textContent = `Hola de nuevo, ${data.user.user_name}`;
         } else {
             //Returns to default state if not authenticated, just in case
             if (loginBtn) loginBtn.style.display = "block";

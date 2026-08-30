@@ -56,7 +56,7 @@ try {
     ]);
 
 } catch (Exception $e) {
-    error_log("LoginAction error: " . $e->getMessage());
+    error_log("Servicio no disponible");
     http_response_code(401);
     echo json_encode([
         "success" => false,

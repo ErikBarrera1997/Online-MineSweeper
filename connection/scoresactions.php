@@ -3,7 +3,6 @@ require_once __DIR__ . '/supabaseConection.php';
 
 header('Content-Type: application/json');
 
-// Verificar que la petición sea POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_name = isset($_POST['user_name']) && $_POST['user_name'] !== 'null' ? $_POST['user_name'] : null;
     $score = isset($_POST['score']) ? floatval($_POST['score']) : 0;
@@ -19,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Error en Supabase: " . $result['error']);
         }
 
-        echo json_encode(['success' => true, 'message' => 'Puntuación guardada correctamente en Supabase']);
+        echo json_encode(['success' => true, 'message' => '¡Puntuación guardada correctamente!']);
 
     } catch (Exception $e) {
         error_log("ScoresAction error: " . $e->getMessage());
